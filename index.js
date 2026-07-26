@@ -7,6 +7,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors')
 const crypto = require('crypto');
+const os = require('os');
 const pkg = require('./package.json');
 
 
@@ -55,8 +56,17 @@ const router = express.Router();
 
 // Hello World for index page
 app.get('/', function (req, res) {
-    return res.send("Hello World!");
-})
+    return res.json({
+        message: 'Project 10 is running',
+        instance: os.hostname(),
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Azure Load Balancer will use this endpoint to check instance health.
+app.get('/health', function (req, res) {
+    return res.status(200).send('healthy');
+});
 
 app.get('/api', function (req, res) {
     return res.send("Fabrikam Bank API");
